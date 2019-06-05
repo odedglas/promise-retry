@@ -17,7 +17,7 @@ npm i @pdedg/promise-retry
 
 ## API
 
-### `promiseRetry [Function]`
+### promiseRetry(fn, [options])
 
 A promise retry executor
  * @param  {Function} run                    Function that returns a promise
@@ -59,7 +59,7 @@ promiseRetry(run);
  */
 ```
 
-### `fetchRetry [Function]`
+### fetchRetry(fetch, url, [options])
 
 Wraps a fetch request with retry, by default it will retry on the following http status
  [408, 503, 504] and on request-timeout error.
