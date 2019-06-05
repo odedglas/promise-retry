@@ -12,7 +12,7 @@ A promise retry executor with exponential  backoff strategy. Comes with fetch re
 
 Install the package:
 ```sh
-npm i @encoded/promise-retry
+npm i @odedglas/promise-retry
 ```
 
 ## API
@@ -33,7 +33,7 @@ A promise retry executor
 ```js
 // Simple execution
 
-import { promiseRetry } from '@encoded/promise-retry';
+import { promiseRetry } from '@odedglas/promise-retry';
 
 const run = () => new Promise((resolve, reject) => reject());
 promiseRetry(run); // will execute rejected promise by default 3 times and after will trow error
@@ -42,7 +42,7 @@ promiseRetry(run); // will execute rejected promise by default 3 times and after
 ```js
 // With custom delay strategy
 
-import { promiseRetry } from '@encoded/promise-retry';
+import { promiseRetry } from '@odedglas/promise-retry';
 
 const options = {
     retries: 5,
@@ -79,7 +79,7 @@ Wraps a fetch request with retry, by default it will retry on the following http
 ```js
 // Simple execution
 
-import { fetchRetry } from '@encoded/promise-retry';
+import { fetchRetry } from '@odedglas/promise-retry';
 
 const fetch = () => new Promise((resolve, reject) => reject());
 fetchRetry(run, '/end-point', { delay: 100 }); // Will execute 3 fetch calls with 100 / 200 / 400 delay and eventually an error will be thrown.
@@ -88,7 +88,7 @@ fetchRetry(run, '/end-point', { delay: 100 }); // Will execute 3 fetch calls wit
 ```js
 // With custom options
 
-import { fetchRetry } from '@encoded/promise-retry';
+import { fetchRetry } from '@odedglas/promise-retry';
 
 const options = {
     retries: 2,

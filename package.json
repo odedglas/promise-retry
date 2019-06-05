@@ -1,5 +1,5 @@
 {
-  "name": "@encoded/promise-retry",
+  "name": "@odedglas/promise-retry",
   "version": "1.0.0",
   "description": "Promise with retry executor",
   "author": "Oded Goldglas <odedglas@gmail.com>",
