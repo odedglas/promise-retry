@@ -42,7 +42,7 @@ describe('fetchRetry', () => {
         }).catch(e => {
 
             expect(e.retriesLeft).toEqual(DEFAULT_RETRIES - 1);
-            expect(onFail).toHaveBeenCalled();
+            expect(onFail).toHaveBeenCalledTimes(0);
             done();
         });
     });

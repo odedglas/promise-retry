@@ -18,11 +18,12 @@ const baseRetryOnResolved = (res) => {
  * @param delay - The delay between executions, can be a number for the default backoff strategy OR a custom function
  * @param retryOnResolved - When should retry on resolved fetch result
  * @param retryOnError - When should retry on error occurred
- * @param onFailedAttempt - Execute on each failure
+ * @param onFailedAttempt        Error callback, will be called on each retriable error.
+ * @param onBreach               Error callback, will be called on 2 cases: 1) When attempts are equal to retries. 2) On Non retriable error.
  * @param fetchOptions - Normal fetch options you would pass
  * @returns {Any|Object}
  */
-export const fetchRetry = (fetch, url, { retries = DEFAULT_RETRIES, delay = DEFAULT_DELAY, retryOnResolved, retryOnError, onFailedAttempt, ...fetchOptions } = {}) => {
+export const fetchRetry = (fetch, url, { retries = DEFAULT_RETRIES, delay = DEFAULT_DELAY, retryOnResolved, retryOnError, onFailedAttempt, onBreach, ...fetchOptions } = {}) => {
 
     retryOnResolved = retryOnResolved || baseRetryOnResolved;
     retryOnError = retryOnError || baseRetryOnError;
@@ -32,7 +33,8 @@ export const fetchRetry = (fetch, url, { retries = DEFAULT_RETRIES, delay = DEFA
         retryOn: retryOnError,
         retries,
         delay,
-        onFailedAttempt
+        onFailedAttempt,
+        onBreach
     };
 
     return promiseRetry(() => fetch(url, fetchOptions), options);

@@ -1,6 +1,6 @@
 {
   "name": "@pdedg/promise-retry",
-  "version": "1.0.2",
+  "version": "1.0.5",
   "description": "Promise with retry executor",
   "author": "Oded Goldglas <odedglas@gmail.com>",
   "license": "ISC",

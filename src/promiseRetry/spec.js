@@ -17,7 +17,8 @@ describe('promiseRetry', () => {
             validateResolved: () => true,
         };
 
-        promiseRetry(() => generatePromise(true), options).then(() => {
+        promiseRetry(() => generatePromise(true), options).then((res, x) => {
+            console.log('Result is : ', res, x);
             done();
         }).catch((error) => { done.fail(new Error(error)); });
     });

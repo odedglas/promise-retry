@@ -20,13 +20,14 @@ npm i @pdedg/promise-retry
 ### promiseRetry(fn, [options])
 
 A promise retry executor
- * @param  {Function} run                    Function that returns a promise
- * @param  {Object} Options                  Execution options
-     * @param  {Function} validateResolved       Sample promise resolved result and determines if OK
-     * @param  {Function} retryOn                Determines when to retry on error
-     * @param  {Number} retries                  Amount of retries to execute
-     * @param  {Number|Function} delay           The delay between execution ( Can be a function for delay strategies)
-     * @param  {Function} onFailedAttempt        Error callback, will be called on each error.
+ * @param  {Function} run                   Function that returns a promise
+ * @param  {Object} Options                 Execution options
+     * @param  {Function} validateResolved  Sample promise resolved result and determines if OK
+     * @param  {Function} retryOn           Determines when to retry on error
+     * @param  {Number} retries             Amount of retries to execute
+     * @param  {Number|Function} delay      The delay between execution ( Can be a function for delay strategies)
+     * @param {Function} onFailedAttempt    Error callback, will be called on each retriable error.
+     * @param {Function} onBreach -         Error callback, will be called on 2 cases: 1) When attempts are equal to retries. 2) On Non retriable error
  
 #### Examples
 
@@ -67,12 +68,13 @@ Wraps a fetch request with retry, by default it will retry on the following http
  * @param {Function} fetch - Can be any fetch implementation ( node-fetch / browser fetch )
  * @param {String} url - Request url
  * @param {Object} options - fetch retry options
-     * @param {Number} retries - Amount of retries, default to 3
-     * @param {Number / Function} delay - The delay between executions, can be a number for the default backoff strategy OR a custom function
-     * @param {Function} retryOnResolved - When should retry on resolved fetch result
-     * @param {Function} retryOnError - When should retry on error occurred
-     * @param {Function} onFailedAttempt - Execute on each failure
-     * @param {Object} fetchOptions - Normal fetch options you would pass
+     * @param {Number} retries              Amount of retries, default to 3
+     * @param {Number / Function} delay     The delay between executions, can be a number for the default backoff strategy OR a custom function
+     * @param {Function} retryOnResolved    When should retry on resolved fetch result
+     * @param {Function} retryOnError       When should retry on error occurred
+     * @param {Function} onFailedAttempt    Error callback, will be called on each retriable error.
+     * @param {Function} onBreach           Error callback, will be called on 2 cases: 1) When attempts are equal to retries. 2) On Non retriable error.
+     * @param {Object} fetchOptions         Normal fetch options you would pass
  
 #### Examples
 
@@ -82,7 +84,7 @@ Wraps a fetch request with retry, by default it will retry on the following http
 import { fetchRetry } from '@pdedg/promise-retry';
 
 const fetch = () => new Promise((resolve, reject) => reject());
-fetchRetry(run, '/end-point', { delay: 100 }); // Will execute 3 fetch calls with 100 / 200 / 400 delay and eventually an error will be thrown.
+fetchRetry(fetch, '/end-point', { delay: 100 }); // Will execute 3 fetch calls with 100 / 200 / 400 delay and eventually an error will be thrown.
 ```
 
 ```js
@@ -100,7 +102,7 @@ const options = {
 }
 
 const fetch = () => new Promise((resolve, reject) => resolve({ status: 300 }));
-fetchRetry(run, '/end-point', options)
+fetchRetry(fetch, '/end-point', options)
 /*
     Will result of: 2 executions of resolved promises, that will be rejected by the validate resolved method.
     eventually, it will throw an error.

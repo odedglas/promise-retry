@@ -34,22 +34,25 @@ const backoff = (delay) => delay * 2;
  * @param  {Function} retryOn                Determines when to retry on error, DEFAULT - all ways
  * @param  {Number} retries                  Amount of retries to execute, DEFAULT - 1 retry
  * @param  {Number|Function} delay           The exponential delay between execution ( Can be a function for delay strategies) DEFAULT - 0
- * @param  {Function} onFailedAttempt        Error callback, will be called on each error.
+ * @param  {Function} onFailedAttempt        Error callback, will be called on each retriable error.
+ * @param  {Function} onBreach               Error callback, will be called on 2 cases: 1) When attempts are equal to retries. 2) On Non retriable error.
  * @param  {Number} attempt                  Current attempt
  * @return {Any|Object} Promise result / Error
  */
-export const promiseRetry = (run, { validateResolved, retryOn = () => true, retries = 1, delay = 0, onFailedAttempt }, attempt = 1) => run().then((res) => {
+export const promiseRetry = (run, { validateResolved, retryOn = () => true, retries = 1, delay = 0, onFailedAttempt, onBreach }, attempt = 1) => run().then((res) => {
     validateResolved && validateResolved(res, attempt);
     return res;
 }).catch((err = {}) => {
 
     err = decorateError(err, retries, attempt);
+    const shouldRetry = retries > 1 && retryOn(err);
 
-    onFailedAttempt && onFailedAttempt(err);
+    shouldRetry && onFailedAttempt && onFailedAttempt(err);
+    !shouldRetry && onBreach && onBreach(err);
+
     const retryDelay = typeof delay === 'function' ? delay(err) : backoff(delay);
 
-    const shouldRetry = retries > 1 && retryOn(err);
     return shouldRetry
-        ? pause(retryDelay).then(() => promiseRetry(run, { validateResolved, retryOn, retries: err.retriesLeft, delay: retryDelay, onFailedAttempt }, attempt + 1))
+        ? pause(retryDelay).then(() => promiseRetry(run, { validateResolved, retryOn, retries: err.retriesLeft, delay: retryDelay, onFailedAttempt, onBreach}, attempt + 1))
         : Promise.reject(err);
 });
