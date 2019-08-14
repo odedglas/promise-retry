@@ -1,6 +1,6 @@
 {
   "name": "@pdedg/promise-retry",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Promise with retry executor",
   "author": "Oded Goldglas <odedglas@gmail.com>",
   "license": "ISC",
@@ -9,7 +9,7 @@
     "url": "https://github.com/odedglas/promise-retry"
   },
   "homepage": "https://github.com/odedglas/promise-retry",
-  "main": "dist/index.js",
+  "main": "dist/index .js",
   "scripts": {
     "test": "jest -c configuration/jest.config.js",
     "lint": "eslint .",
